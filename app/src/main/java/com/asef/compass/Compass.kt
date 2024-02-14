@@ -1,3 +1,7 @@
+package com.asef.compass
+
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +16,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -40,6 +46,7 @@ fun Compass(
     rotation: Float
 ) {
     val textMeasurer = rememberTextMeasurer()
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -77,6 +84,20 @@ fun Compass(
                         strokeWidth = if (i % 90 == 0) 10f else 5f
                     )
                 }
+                // Kaaba, Bangladesh Qibla angle is 278.08 degree for compass according to https://www.kible.org/bd/dhaka-qibla-finder-342.html
+                val kaabaStartX =
+                    centerX + sin(278.08f * Math.PI.toFloat() / 180) * markerRadius * 1.65f
+                val kaabaStartY =
+                    centerY - cos(278.08f * Math.PI.toFloat() / 180) * markerRadius * 1.65f
+                var kaabaBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.kaaba)
+                val imageHeight = 100
+                val imageWidth = 100
+                kaabaBitmap = Bitmap.createScaledBitmap(kaabaBitmap, imageWidth, imageHeight, false)
+                    .rotate(-90f)
+                drawImage(
+                    image = kaabaBitmap.asImageBitmap(),
+                    topLeft = Offset(kaabaStartX - imageWidth / 2, kaabaStartY - imageHeight / 2)
+                )
                 val fontStyleSWE = TextStyle(
                     fontSize = 24.sp,
                     color = CardinalFont,

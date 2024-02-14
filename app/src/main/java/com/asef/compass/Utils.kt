@@ -1,5 +1,8 @@
 package com.asef.compass
 
+import android.graphics.Bitmap
+import android.graphics.Matrix
+
 fun multiplyMatrices(matrix1: Array<Array<Float>>, matrix2: Array<Array<Float>>): Array<Array<Float>> {
     val row1 = matrix1.size
     val col1 = matrix1[0].size
@@ -15,4 +18,9 @@ fun multiplyMatrices(matrix1: Array<Array<Float>>, matrix2: Array<Array<Float>>)
     }
 
     return product
+}
+
+fun Bitmap.rotate(degrees: Float): Bitmap {
+    val matrix = Matrix().apply { postRotate(degrees) }
+    return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
 }
