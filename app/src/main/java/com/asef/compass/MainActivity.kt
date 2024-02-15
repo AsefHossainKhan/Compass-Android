@@ -22,8 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.MutableLiveData
 import com.asef.compass.ui.theme.CompassTheme
+import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.math.tan
 
 class MainActivity : ComponentActivity() {
     private var rotationMatrix: FloatArray = FloatArray(9)
@@ -72,22 +74,28 @@ class MainActivity : ComponentActivity() {
                     SensorManager.getOrientation(rotationMatrix, orientationAngles)
                     val azimuth = orientationAngles[0]
                     val pitch = orientationAngles[1]
-                    val roll = orientationAngles[2]
+                    var roll = orientationAngles[2]
+//                    var z = azimuth + atan((sin(roll) * tan(pitch)).toDouble() / cos(roll) * tan(pitch))
+                    if (pitch > Math.PI / 2 || pitch < -Math.PI / 2 ) {
+                        roll = 0f
+                    }
+
                     val rollMatrix = arrayOf(
                         arrayOf(1f, 0f, 0f),
-                        arrayOf(0f, cos(roll), -sin(roll)),
-                        arrayOf(0f, sin(roll), cos(roll))
+                        arrayOf(0f, cos(roll), sin(roll)),
+                        arrayOf(0f, -sin(roll), cos(roll))
                     )
                     val pitchMatrix = arrayOf(
-                        arrayOf(cos(pitch), 0f, sin(pitch)),
+                        arrayOf(cos(pitch), 0f, -sin(pitch)),
                         arrayOf(0f, 1f, 0f),
-                        arrayOf(-sin(pitch), 0f, cos(pitch))
+                        arrayOf(sin(pitch), 0f, cos(pitch))
                     )
                     val x = arrayOf(arrayOf(azimuth), arrayOf(pitch), arrayOf(roll))
                     val y = multiplyMatrices(pitchMatrix, rollMatrix)
                     val z = multiplyMatrices(y, x)
 
                     mutableRotation.postValue(-((Math.toDegrees(z[0][0].toDouble()) + 360) % 360).toFloat())
+//                    mutableRotation.postValue((-((Math.toDegrees(z)) + 360) % 360).toFloat())
                 }
 
             }
