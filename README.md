@@ -1,5 +1,5 @@
 # Compass-Android
-A simple android compass with NO ADS! and Qibla direction included. The base UI is fully done in Canvas using its basic draw and math.
+A simple android compass with NO ADS! and Qibla (calibrated for Bangladesh) direction included. The base UI is fully done in Canvas using its basic draw and math. It should also have somewhat tilt compensation.
 
 ## Why?
 The application was made so that I wouldn't have to suffer ADS whenever I needed a simple Compass for checking the Qibla or other uses.
