@@ -6,20 +6,24 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import com.asef.compass.ui.theme.CompassTheme
 import kotlin.math.atan
@@ -36,6 +40,7 @@ class MainActivity : ComponentActivity() {
     private var accelerometer: Sensor? = null
     private lateinit var sensorEventListener: SensorEventListener
     private var mutableRotation = MutableLiveData(0.0f)
+    private var mutableAccuracy = MutableLiveData("")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +107,22 @@ class MainActivity : ComponentActivity() {
 
             override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
                 // Handle accuracy changes
-                Log.d("TAG", "onAccuracyChanged: $sensor --- $accuracy")
+                when (accuracy) {
+                    SensorManager.SENSOR_STATUS_UNRELIABLE -> mutableAccuracy.value =
+                        "Unreliable (Make 8 in the air to increase accuracy)"
+
+                    SensorManager.SENSOR_STATUS_ACCURACY_LOW -> mutableAccuracy.value =
+                        "Low (Make 8 in the air to increase accuracy)"
+
+                    SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> mutableAccuracy.value =
+                        "Medium (You can make 8 in the air to increase accuracy)"
+
+                    SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> mutableAccuracy.value =
+                        "High (Good)"
+
+                    else -> mutableAccuracy.value =
+                        "Data not available"
+                }
             }
         }
 
@@ -117,6 +137,12 @@ class MainActivity : ComponentActivity() {
                         mutableRotation.observeAsState().value!!,
                         label = "rotation animation value",
                         animationSpec = tween(200, easing = EaseInOut)
+                    )
+                    val accuracy by mutableAccuracy.observeAsState()
+                    Text(
+                        text = "Accuracy: ${accuracy.toString()}",
+                        modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                        textAlign = TextAlign.Center
                     )
                     Compass(rotation)
                 }
