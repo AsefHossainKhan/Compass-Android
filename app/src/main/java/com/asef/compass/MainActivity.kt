@@ -109,19 +109,19 @@ class MainActivity : ComponentActivity() {
                 // Handle accuracy changes
                 when (accuracy) {
                     SensorManager.SENSOR_STATUS_UNRELIABLE -> mutableAccuracy.value =
-                        "Unreliable (Make 8 in the air to increase accuracy)"
+                        getString(R.string.horrible_accuracy)
 
                     SensorManager.SENSOR_STATUS_ACCURACY_LOW -> mutableAccuracy.value =
-                        "Low (Make 8 in the air to increase accuracy)"
+                        getString(R.string.low_accuracy)
 
                     SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM -> mutableAccuracy.value =
-                        "Medium (You can make 8 in the air to increase accuracy)"
+                        getString(R.string.medium_accuracy)
 
                     SensorManager.SENSOR_STATUS_ACCURACY_HIGH -> mutableAccuracy.value =
-                        "High (Good)"
+                        getString(R.string.high_accuracy)
 
                     else -> mutableAccuracy.value =
-                        "Data not available"
+                        getString(R.string.unavailable_accuracy)
                 }
             }
         }
@@ -141,7 +141,9 @@ class MainActivity : ComponentActivity() {
                     val accuracy by mutableAccuracy.observeAsState()
                     Text(
                         text = "Accuracy: ${accuracy.toString()}",
-                        modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
                         textAlign = TextAlign.Center
                     )
                     Compass(rotation)

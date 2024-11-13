@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Compass</string>
+    <string name="horrible_accuracy">Horrible. Draw a figure-eight in the air to improve accuracy.</string>
+    <string name="low_accuracy">Low. Draw a figure-eight in the air to improve accuracy.</string>
+    <string name="medium_accuracy">Medium. Draw a figure-eight in the air to improve accuracy.</string>
+    <string name="high_accuracy">High. Good calibration</string>
+    <string name="unavailable_accuracy">Accuracy data not available</string>
 </resources>
